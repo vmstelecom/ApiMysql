@@ -8,6 +8,19 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+    
+    const carro = {
+        modelo: req.body.modelo,
+        marca: req.body.marca,
+        placa: req.body.placa,
+        km: req.body.km,
+        data: req.body.data,
+        valor_litro: req.body.valor_litro,
+        valor_total: req.body.valor_total,
+        litros: req.body.litros,
+        consumo: req.body.consumo
+    }
+
     res.status(201).send({
         mensagem: 'POST em carros'
     });
