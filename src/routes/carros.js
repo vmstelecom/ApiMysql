@@ -1,14 +1,32 @@
 const express = require('express');
 const router = express.Router();
+const mysql = require('../../database/mysql').pool;
 
 router.get('/', (req, res, next) => {
-    res.status(200).send({
-        mensagem: 'GET em carros'
+    mysql.getConnection((error, conn) => {
+        if (error) { 
+            return res.status(500).send({
+                error: error
+            });         
+        }
+        conn.query(
+            'SELECT * FROM carros;',
+            (error, resultado, field) => {
+                conn.release();
+                if (error) {
+                    return res.status(500).send({
+                        error: error,
+                        response: null
+                    });
+                }
+                res.status(200).send({ response: resultado}); 
+            }
+        )
     });
 });
 
 router.post('/', (req, res, next) => {
-        const carro = {
+        /* const carro = {
         modelo: req.body.modelo,
         marca: req.body.marca,
         placa: req.body.placa,
@@ -18,34 +36,127 @@ router.post('/', (req, res, next) => {
         valor_total: req.body.valor_total,
         litros: req.body.litros,
         consumo: req.body.consumo
-    };
+    }; */
 
-    res.status(201).send({
-        mensagem: 'Insere um carros',
-        carroCriado: carro
+    mysql.getConnection((error, conn) => {
+        conn.query(
+            'INSERT INTO carros (modelo, marca, placa, km, data, valor_litro, valor_total, litros, consumo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [
+                req.body.modelo,
+                req.body.marca,
+                req.body.placa,
+                req.body.km,
+                req.body.data,
+                req.body.valor_litro,
+                req.body.valor_total,
+                req.body.litros,
+                req.body.consumo
+            ],
+            (error, resultado, field) => {
+                conn.release();
+
+                if (error) {
+                    return res.status(500).send({
+                        error: error,
+                        response: null
+                    });
+                }
+
+                res.status(201).send({
+                    mensagem: 'Carro inserido',
+                    id: resultado.insertId
+                });
+            }
+        )
     });
 });
 
 router.get('/:id', (req, res, next) => {
-    const id = req.params.id
-    res.status(200).send({
-        mensagem: 'GET com id em carros',
-        id: id
+    mysql.getConnection((error, conn) => {
+        if (error) { 
+            return res.status(500).send({
+                error: error
+            });         
+        }
+        conn.query(
+            'SELECT * FROM carros WHERE id = ?;',
+            [req.params.id],
+            (error, resultado, field) => {
+                conn.release();
+                if (error) {
+                    return res.status(500).send({
+                        error: error,
+                        response: null
+                    });
+                }
+                res.status(200).send({ response: resultado}); 
+            }
+        )
     });
 });
 
-router.patch('/:id', (req, res, next) => {
-    const id = req.params.id
-    res.status(200).send({
-        mensagem: 'PATCH(alterar) em carros',
-        id: id
+router.patch('/', (req, res, next) => {
+    mysql.getConnection((error, conn) => {
+        if (error) { 
+            return res.status(500).send({
+                error: error
+            });         
+        }
+        conn.query(
+            'UPDATE carros SET modelo = ?, marca = ?, placa = ?, km = ?, data = ?, valor_litro = ?, valor_total = ?, litros = ?, consumo = ? WHERE id = ?;',
+            [
+                req.body.modelo,
+                req.body.marca,
+                req.body.placa,
+                req.body.km,
+                req.body.data,
+                req.body.valor_litro,
+                req.body.valor_total,
+                req.body.litros,
+                req.body.consumo,
+                req.body.id
+            ],
+            (error, resultado, field) => {
+                conn.release();
+                if (error) {
+                    return res.status(500).send({
+                        error: error,
+                        response: null
+                    });
+                }
+                res.status(202).send({
+                    message: "Carro alterado", 
+                    result: resultado
+                });
+            }
+        )
     });
 });
 
 router.delete('/', (req, res, next) => {
-    const id = req.params.id
-    res.status(201).send({
-        mensagem: 'DELETE em carros ->' + id,
+    mysql.getConnection((error, conn) => {
+        if (error) { 
+            return res.status(500).send({
+                error: error
+            });         
+        }
+        conn.query(
+            'DELETE FROM carros WHERE id = ?;',
+            [req.body.id],
+            (error, resultado, field) => {
+                conn.release();
+                if (error) {
+                    return res.status(500).send({
+                        error: error,
+                        response: null
+                    });
+                }
+                res.status(202).send({
+                    message: "Carro apagado", 
+                    result: resultado
+                });
+            }
+        )
     });
 });
 
