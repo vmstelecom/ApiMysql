@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mysql = require('../../database/mysql');
 
 router.get('/', (req, res, next) => {
     res.status(200).send({
@@ -8,8 +9,15 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+    const usuario = {
+        nome: req.body.nome,
+        email: req.body.email,
+        fone: req.body.fone,
+        dnasc: req.body.datanasc
+    }
     res.status(201).send({
-        mensagem: 'POST em login'
+        mensagem: 'Insere um usuario',
+        usuarioCriado: usuario
     });
 });
 

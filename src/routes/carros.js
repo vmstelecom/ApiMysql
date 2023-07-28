@@ -8,8 +8,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    
-    const carro = {
+        const carro = {
         modelo: req.body.modelo,
         marca: req.body.marca,
         placa: req.body.placa,
@@ -19,10 +18,11 @@ router.post('/', (req, res, next) => {
         valor_total: req.body.valor_total,
         litros: req.body.litros,
         consumo: req.body.consumo
-    }
+    };
 
     res.status(201).send({
-        mensagem: 'POST em carros'
+        mensagem: 'Insere um carros',
+        carroCriado: carro
     });
 });
 
