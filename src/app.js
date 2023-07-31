@@ -7,6 +7,7 @@ const rotaLogin = require('./routes/login');
 const rotaCarros = require('./routes/carros');
 
 app.use(morgan('dev'));
+app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 
