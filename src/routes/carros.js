@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('../../database/mysql').pool;
+const auth = require('../../middleware/auth');
 
 router.get('/', (req, res, next) => {
     mysql.getConnection((error, conn) => {
@@ -48,7 +49,7 @@ router.get('/', (req, res, next) => {
     });
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', auth, (req, res, next) => {
     mysql.getConnection((error, conn) => {
         conn.query(
             'INSERT INTO carros (modelo, marca, placa, km, data, valor_litro, valor_total, litros, consumo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -133,7 +134,7 @@ router.get('/:id', (req, res, next) => {
     });
 });
 
-router.patch('/', (req, res, next) => {
+router.patch('/', auth, (req, res, next) => {
     mysql.getConnection((error, conn) => {
         if (error) { 
             return res.status(500).send({
@@ -176,7 +177,7 @@ router.patch('/', (req, res, next) => {
     });
 });
 
-router.delete('/', (req, res, next) => {
+router.delete('/', auth, (req, res, next) => {
     mysql.getConnection((error, conn) => {
         if (error) { 
             return res.status(500).send({
