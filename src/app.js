@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 
 const rotaLogin = require('./routes/login');
 const rotaCarros = require('./routes/carros');
+const rotaUsuarios = require('./routes/usuarios');
 
 app.use(morgan('dev'));
 app.use('/uploads', express.static('uploads'));
@@ -28,6 +29,7 @@ app.use((req, res, next) => {
 
 app.use('/login', rotaLogin);
 app.use('/carros', rotaCarros);
+app.use('/usuarios', rotaUsuarios);
 /* app.use('/', (req, res, next) => {
     res.status(200).send({
         message: 'Instruções de uso da API'
